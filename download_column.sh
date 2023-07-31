@@ -20,12 +20,11 @@ then
     # Execute pepcli in Singularity container
     # and move data to DATADIR if successful
     singularity exec \
-    -B "$HOME/pepclient/config":/config:ro \
-    -B "$HOME/pepclient/secrets":/secrets:ro \
-    -B "$OUTPUTDIR":/data \
-    --pwd /data \
-    "$HOME/pep-services.sif" \
-    /app/pepcli --client-working-directory /config --oauth-token /secrets/oauth.json pull --update --resume -o /data/output/$COLUMN && \
+      -B "$HOME/pep-token":/token:ro \
+      -B "$OUTPUTDIR":/data \
+      --pwd /data \
+      "$HOME/pep-client.sif" \
+      /app/pepcli --client-working-directory /config --oauth-token /token/OAuthToken.json pull --update --resume -o /data/output/$COLUMN && \
     mv $OUTPUTDIR/output/$COLUMN $DATADIR && rm -rf $OUTPUTDIR
 else
     # Start new download
@@ -34,11 +33,10 @@ else
     # Execute pepcli in Singularity container
     # and move data to DATADIR if successful
     singularity exec \
-      -B "$HOME/pepclient/config":/config:ro \
-      -B "$HOME/pepclient/secrets":/secrets:ro \
+      -B "$HOME/pep-token":/token:ro \
       -B "$OUTPUTDIR":/data \
-      --pwd /data \
-      "$HOME/pep-services.sif" \
-      /app/pepcli --client-working-directory /config --oauth-token /secrets/oauth.json pull -c $COLUMN -P all-ppp -o /data/output/$COLUMN && \
+      --pwd /output \
+      "$HOME/pep-client.sif" \
+      /app/pepcli --client-working-directory /config --oauth-token /token/OAuthToken.json pull -c $COLUMN -P all-ppp -o /data/output/$COLUMN && \
     mv $OUTPUTDIR/output/$COLUMN $DATADIR && rm -rf $OUTPUTDIR
 fi
