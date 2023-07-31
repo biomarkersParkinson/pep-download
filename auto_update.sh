@@ -16,12 +16,12 @@ DATADIR="/projects/0/einf2658/PPP"
 while read c && [ $N_JOBS -gt 0 ]; do
     JOB_ID_PATH="$DATADIR/$c/jobid"
 
-    echo "Checking $c"
+    #echo "Checking $c"
 
     # Check if this is a new download
     if [ ! -f "$JOB_ID_PATH" ] && [ ! -f "${JOB_ID_PATH}_finished" ]
     then
-        echo "Queueing update job"
+        echo "Queueing update job for $c"
 
         # This queues a new download job, extracts the job id from the output and writes that to a file
         RESULT=$(sbatch --export=COLUMN="$c" update_column.sh) && \

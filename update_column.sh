@@ -19,5 +19,5 @@ singularity exec \
   --contain \
   --no-mount hostfs \
   "$HOME/pep-client.sif" \
-  /app/pepcli --client-working-directory /config --oauth-token /token/OAuthToken.json pull -u -o /data/$COLUMN && \
+  /app/pepcli --client-working-directory /config --oauth-token /token/OAuthToken.json pull --resume -u -o /data/$COLUMN && \
   mv $DATADIR/$COLUMN/jobid $DATADIR/$COLUMN/jobid_finished
