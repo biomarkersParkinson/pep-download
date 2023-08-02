@@ -1,5 +1,6 @@
 import os
 import json
+import shutil
 
 """
 This script verifies that the data downloaded from PEP is complete, based on the list-data-out.json file
@@ -16,8 +17,9 @@ def check_dir(column, participant):
     file_count = len(os.listdir(f'{DATADIR}/{column}/{participant}'))
     if file_count == 0:
         print(f'Missing data, but folder exists: {column} / {participant}')
-    if file_count == 2:
-        print(f'Multiple files for {column} / {participant}')
+    if file_count > 1:
+        print(f'{file_count} files for {column} / {participant}')
+        # shutil.rmtree(f'{DATADIR}/{column}/{participant}')
 
 for column, participants in data.items():
     participant_dirs = os.listdir(f'{DATADIR}/{column}')
