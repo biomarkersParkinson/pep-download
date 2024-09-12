@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Set job requirements
-#SBATCH -p staging
+#SBATCH -p genoa
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH -t 16:00:00
+#SBATCH -t 10:00:00
 
 # Slurm batch job that downloads one column of data.
 # The column should be available in the environment variable COLUMN
@@ -22,7 +22,8 @@ then
     singularity exec \
       -B "$HOME/pep-token":/token:ro \
       -B "$OUTPUTDIR":/data \
-      --pwd /data \
+      --contain \
+      --no-mount hostfs \
       "$HOME/pep-client.sif" \
       /app/pepcli --client-working-directory /config --oauth-token /token/OAuthToken.json pull --update --resume -o /data/output/$COLUMN && \
     mv $OUTPUTDIR/output/$COLUMN $DATADIR && rm -rf $OUTPUTDIR
@@ -35,8 +36,9 @@ else
     singularity exec \
       -B "$HOME/pep-token":/token:ro \
       -B "$OUTPUTDIR":/data \
-      --pwd /output \
+      --contain \
+      --no-mount hostfs \
       "$HOME/pep-client.sif" \
-      /app/pepcli --client-working-directory /config --oauth-token /token/OAuthToken.json pull -c $COLUMN -P all-ppp -o /data/output/$COLUMN && \
+      /app/pepcli --client-working-directory /config --oauth-token /token/OAuthToken.json pull -c $COLUMN -P psp-controls -o /data/output/$COLUMN && \
     mv $OUTPUTDIR/output/$COLUMN $DATADIR && rm -rf $OUTPUTDIR
 fi
